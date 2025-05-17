@@ -8,36 +8,38 @@ import (
 	"time"
 
 	"github.com/TheTitanrain/w32"
-	"github.com/micmonay/keybd_event"
 )
 
 var websites = []string{
-	"https://pixel.one",
 	"https://lk.clubpixel.ru/dashboard",
 	"https://ln1034.listokcrm.ru/",
-	"https://www.google.com/",
-	"https://dzen.ru/",
+	"https://c1.saas.infomaximum.com/145ac4ace73c43ad80ce71fc583a4d4a/persons",
+	"https://lk.clubpixel.ru/marketplace/manage",
+	"https://lk.clubpixel.ru/reports",
 }
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	for {
-		doRandomActivity()
-		time.Sleep(10 * time.Second)
+		openWebsiteAndEmulateActivity()
+		time.Sleep(30 * time.Second)
 	}
 }
 
-func doRandomActivity() {
-	// Примерно по 35% шанс для каждого действия
-	roll := rand.Intn(100)
-	switch {
-	case roll < 35:
+func openWebsiteAndEmulateActivity() {
+	url := websites[rand.Intn(len(websites))]
+	fmt.Println("🌐 Переход по ссылке:", url)
+	openBrowser(url)
+
+	// Подождём немного, чтобы страница успела открыться
+	time.Sleep(5 * time.Second)
+
+	fmt.Println("🖱 Эмуляция активности на странице в течение 15 секунд...")
+	start := time.Now()
+	for time.Since(start) < 15*time.Second {
 		moveMouseRandom()
-	case roll < 70:
-		typeRandomKey()
-	default:
-		openRandomWebsite()
+		time.Sleep(500 * time.Millisecond)
 	}
 }
 
@@ -45,37 +47,7 @@ func moveMouseRandom() {
 	x := rand.Intn(800) + 100
 	y := rand.Intn(600) + 100
 	w32.SetCursorPos(x, y)
-	fmt.Println("🖱 Мышь перемещена в:", x, y)
-}
-
-func typeRandomKey() {
-	kb, err := keybd_event.NewKeyBonding()
-	if err != nil {
-		fmt.Println("❌ Ошибка клавиатуры:", err)
-		return
-	}
-
-	keys := []int{
-		keybd_event.VK_ENTER, keybd_event.VK_SPACE,
-		keybd_event.VK_A, keybd_event.VK_S,
-		keybd_event.VK_D, keybd_event.VK_F,
-		keybd_event.VK_TAB,
-	}
-
-	key := keys[rand.Intn(len(keys))]
-	kb.SetKeys(key)
-
-	if err := kb.Launching(); err != nil {
-		fmt.Println("❌ Ошибка нажатия клавиши:", err)
-		return
-	}
-	fmt.Printf("⌨ Нажата клавиша: %d\n", key)
-}
-
-func openRandomWebsite() {
-	url := websites[rand.Intn(len(websites))]
-	fmt.Println("🌐 Открытие сайта:", url)
-	openBrowser(url)
+	fmt.Println("↔ Мышь перемещена в:", x, y)
 }
 
 func openBrowser(url string) {
