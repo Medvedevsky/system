@@ -16,6 +16,7 @@ var websites = []string{
 	"https://c1.saas.infomaximum.com/145ac4ace73c43ad80ce71fc583a4d4a/persons",
 	"https://lk.clubpixel.ru/marketplace/manage",
 	"https://lk.clubpixel.ru/reports",
+	"https://www.google.com/",
 }
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 
 	for {
 		openWebsiteAndEmulateActivity()
-		time.Sleep(30 * time.Second)
+		time.Sleep(10 * time.Second)
 	}
 }
 
@@ -36,8 +37,9 @@ func openWebsiteAndEmulateActivity() {
 	time.Sleep(5 * time.Second)
 
 	fmt.Println("🖱 Эмуляция активности на странице в течение 15 секунд...")
+	duration := time.Duration(15+rand.Intn(16)) * time.Second // 15 + [0..15] = 15..30 секунд
 	start := time.Now()
-	for time.Since(start) < 15*time.Second {
+	for time.Since(start) < duration {
 		moveMouseRandom()
 		time.Sleep(500 * time.Millisecond)
 	}
